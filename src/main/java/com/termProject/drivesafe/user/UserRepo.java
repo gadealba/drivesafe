@@ -1,5 +1,5 @@
 package com.termProject.drivesafe.user;
 
-public class UserRepo {
-    
-}
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface UserRepo extends JpaRepository<UserModel, Long>{}
