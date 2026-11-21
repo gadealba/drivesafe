@@ -27,16 +27,11 @@ public class UserController {
     //     return aUser;
     // }
     @GetMapping("/getAll")
-    List<ClientUserResponse> all() {
+    List<ClientUserResponse> all() { // sends list of all users (more for admin access than client access)
         return repo.findAll().stream()
             .map(u -> new ClientUserResponse(u.getId(), u.getUsername(), u.getEmail()))
             .toList();
     }
-    // @PostMapping("/addUser")
-    // UserModel addUser(@RequestBody UserModel newUser) {
-    //     userList.add(newUser);
-    //     return newUser;
-    // }
     @GetMapping("/getUserById/{id}")
     UserModel getUserById(@PathVariable long id) {
         for (UserModel user : userList) {
@@ -53,5 +48,21 @@ public class UserController {
         );
         return ResponseEntity.status(HttpStatus.CREATED) // shows the client that the user was created successfully 
             .body(new ClientUserResponse(newUser.getId(), newUser.getUsername(), newUser.getEmail()));
-    }
+        }
+    @PutMapping("/update/username")
+        ResponseEntity<ClientUserResponse> updateUsername(@RequestBody UpdateUsernameRequest request){
+            Optional<UserModel> found = repo.findByEmail(request.email());
+            if (found.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+            if (repo.existsByUsername(request.newUsername())){ // not a new username so not saving data.
+                return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            }
+            UserModel user = found.get();
+            user.setUsername(request.newUsername());
+            repo.save(user);
+            return ResponseEntity.ok(new ClientUserResponse(user.getId(), user.getUsername(), user.getEmail()));
+            
+        }
+    
 }
