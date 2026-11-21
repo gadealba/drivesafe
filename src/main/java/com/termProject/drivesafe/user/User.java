@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 @Data
 @Entity
+@Table (name = "users")
 public class User{
     private @Id @GeneratedValue long id;
     private String username;
@@ -13,10 +14,10 @@ public class User{
 
     public User(){}
 
-    void _init_(User aUser){
-        aUser.setUsername("username");
-        aUser.setPassword("password");
-        aUser.setEmail("@gmail.com");
+    void setUser(User aUser){
+       this.setUsername(aUser.getUsername());
+        this.setPassword(aUser.getPassword());
+        this.setEmail(aUser.getEmail());
 
     }
 }
