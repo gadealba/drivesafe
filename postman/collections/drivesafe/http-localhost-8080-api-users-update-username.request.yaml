@@ -1,0 +1,17 @@
+$kind: http-request
+name: http://localhost:8080/api/users/update/username
+description: ""
+url: http://localhost:8080/api/users/update/username
+method: PUT
+body:
+  type: json
+  content: "{\r
+
+    \    \"email\": \"myEmail.com\",\r
+
+    \    \"newUsername\": \"changingUsername\"\r
+
+    \    \r
+
+    }"
+order: 2000
