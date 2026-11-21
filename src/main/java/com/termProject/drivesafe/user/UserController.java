@@ -34,5 +34,10 @@ public class UserController {
         return ClientUserResponse.from(
             service.updateUsername(request.email(), request.newUsername()));
     }
+    @PostMapping("/login")
+    ResponseEntity<ClientUserResponse> login(@RequestBody ClientLoginRequest request) {
+        UserModel user = service.authenticate(request.username(), request.password());
+        return ResponseEntity.ok(ClientUserResponse.from(user));
+}
     
 }

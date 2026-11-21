@@ -16,4 +16,8 @@ public class apiHandlers {
     ProblemDetail conflict(DuplicateUserException e) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, e.getMessage());
     }
+    @ExceptionHandler(InvalidCredentialsException.class)
+    ProblemDetail unauthorized(InvalidCredentialsException e) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, e.getMessage());
+    }
 }

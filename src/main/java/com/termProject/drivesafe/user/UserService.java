@@ -43,4 +43,18 @@ public class UserService {
         user.setUsername(newUsername);
         return repo.save(user);
     }
+    
+    public UserModel authenticate(String username, String rawPassword) {
+    if (username == null || rawPassword == null) {
+        throw new InvalidCredentialsException();
+    }
+    UserModel user = repo.findByUsername(username.trim())
+        .orElseThrow(InvalidCredentialsException::new);
+
+    if (!encoder.matches(rawPassword, user.getPassword())) {
+        throw new InvalidCredentialsException();
+    }
+    return user;
+}
+
 }

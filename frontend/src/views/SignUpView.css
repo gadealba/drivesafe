@@ -1,0 +1,93 @@
+/* Page: title pinned near the top, card centered in the viewport. */
+.signup-page {
+  position: relative;
+  min-height: 100svh;
+  padding: 96px 16px;
+  display: grid;
+  place-items: center;
+}
+
+.signup-title {
+  position: absolute;
+  top: 24px;
+  left: 0;
+  right: 0;
+  margin: 0;
+  text-align: center;
+  font-size: 2.25rem;
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+/* The square: equal width and height, centered. */
+.signup-card {
+  width: min(420px, 100%);
+  aspect-ratio: 1 / 1;
+  padding: 24px;
+  display: flex;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+
+.signup-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+}
+
+.signup-input {
+  width: 100%;
+  height: 44px;
+  padding: 0 12px;
+  font: inherit;
+  color: var(--text-h);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.signup-input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  border-color: var(--accent);
+}
+
+.signup-button {
+  height: 44px;
+  font: inherit;
+  font-weight: 600;
+  color: var(--accent-contrast);
+  background: var(--accent);
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.signup-button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.signup-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.signup-status {
+  min-height: 1.4em;
+  margin: 0;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.signup-status.error {
+  color: var(--error);
+}
+
+.signup-status.success {
+  color: var(--success);
+}
