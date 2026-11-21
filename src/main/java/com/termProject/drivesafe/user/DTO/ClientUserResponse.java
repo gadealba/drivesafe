@@ -1,3 +1,8 @@
-package com.termProject.drivesafe.user.DTO;
+package com.termProject.drivesafe.user.dto;
 
-public record ClientUserResponse(Long id, String username, String email) {}
+import com.termProject.drivesafe.user.UserModel;
+public record ClientUserResponse(Long id, String username, String email) {
+    public static ClientUserResponse from(UserModel u) {
+        return new ClientUserResponse(u.getId(), u.getUsername(), u.getEmail());
+    }
+}
