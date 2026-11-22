@@ -26,7 +26,8 @@ public class UserController {
 
     @PostMapping("/create")
     ResponseEntity<ClientUserResponse> create(@RequestBody ClientUserRequest request) {
-        UserModel created = service.create(request.username(), request.password(), request.email());
+        UserModel created = service.create(
+    request.username(), request.password(), request.email(), request.securityAnswers());
         return ResponseEntity.status(HttpStatus.CREATED).body(ClientUserResponse.from(created));
     }
     @PutMapping("/update/username")

@@ -20,4 +20,8 @@ public class apiHandlers {
     ProblemDetail unauthorized(InvalidCredentialsException e) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, e.getMessage());
     }
+    @ExceptionHandler(InvalidSecurityAnswersException.class)
+    ProblemDetail incorrectAnswer(InvalidSecurityAnswersException e) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, e.getMessage());
+    }
 }

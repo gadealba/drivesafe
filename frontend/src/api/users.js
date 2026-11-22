@@ -21,3 +21,6 @@ export const loginUser = (credentials) =>
   request('/api/users/login', jsonRequest('POST', credentials))
 
 export const getUsers = () => request('/api/users/getAll')
+
+/** The predetermined security questions: [{ id, text }, ...] */
+export const getSecurityQuestions = () => request('/api/security-questions')
