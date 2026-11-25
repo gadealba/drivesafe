@@ -27,7 +27,7 @@ public class BookingController {
     ResponseEntity<BookingResponse> book(@AuthenticationPrincipal UserSession session,
                                          @PathVariable long carId,
                                          @RequestBody BookingRequest request) {
-        Booking booking = bookings.book(carId, session.userId(), request.start(), request.end());
+        BookingModel booking = bookings.book(carId, session.userId(), request.start(), request.end());
         return ResponseEntity.status(HttpStatus.CREATED).body(BookingResponse.from(booking));
     }
 }

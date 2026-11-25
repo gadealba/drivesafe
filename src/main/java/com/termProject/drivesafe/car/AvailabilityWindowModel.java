@@ -11,7 +11,7 @@ import lombok.AccessLevel;
 @Table(name = "availability_windows")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class AvailabilityWindow {
+public class AvailabilityWindowModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,7 +19,7 @@ public class AvailabilityWindow {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "car_id", nullable = false)
-    private CarListing car;
+    private CarListingModel car;
 
     @Column(name = "start_time", nullable = false)
     private Instant startTime;
@@ -27,7 +27,7 @@ public class AvailabilityWindow {
     @Column(name = "end_time", nullable = false)
     private Instant endTime;
 
-    AvailabilityWindow(CarListing car, Instant startTime, Instant endTime) {
+    AvailabilityWindowModel(CarListingModel car, Instant startTime, Instant endTime) {
         this.car = car;
         this.startTime = startTime;
         this.endTime = endTime;

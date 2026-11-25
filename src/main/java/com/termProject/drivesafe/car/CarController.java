@@ -26,7 +26,7 @@ public class CarController {
     @PostMapping
     ResponseEntity<CarResponse> create(@AuthenticationPrincipal UserSession session,
                                        @RequestBody CreateCarRequest request) {
-        CarListing car = cars.create(session.userId(), request);
+        CarListingModel car = cars.create(session.userId(), request);
         return ResponseEntity.status(HttpStatus.CREATED).body(CarResponse.from(car));
     }
 

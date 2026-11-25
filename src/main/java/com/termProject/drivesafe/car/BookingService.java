@@ -29,7 +29,7 @@ public class BookingService {
      * car are handled one after the other: the second one sees the first booking and is refused.
      */
     @Transactional
-    public Booking book(long carId, long renterId, Instant start, Instant end) {
+    public BookingModel book(long carId, long renterId, Instant start, Instant end) {
         if (start == null || end == null) {
             throw RentalException.badRequest("start and end are required.");
         }
@@ -40,7 +40,7 @@ public class BookingService {
             throw RentalException.badRequest("A rental can't start in the past.");
         }
 
-        CarListing car = carRepo.findByIdForUpdate(carId)
+        CarListingModel car = carRepo.findByIdForUpdate(carId)
             .orElseThrow(() -> RentalException.notFound("Car not found."));
 
         if (!car.isActive()) {
@@ -59,11 +59,11 @@ public class BookingService {
         UserModel renter = userRepo.findById(renterId)
             .orElseThrow(() -> RentalException.notFound("User not found."));
 
-        return bookingRepo.save(new Booking(car, renter, start, end, priceFor(car, start, end)));
+        return bookingRepo.save(new BookingModel(car, renter, start, end, priceFor(car, start, end)));
     }
 
     /** Daily price times the number of days, with any part of a day counted as a full day. */
-    private static BigDecimal priceFor(CarListing car, Instant start, Instant end) {
+    private static BigDecimal priceFor(CarListingModel car, Instant start, Instant end) {
         long minutes = Duration.between(start, end).toMinutes();
         long days = Math.max(1, (minutes + MINUTES_PER_DAY - 1) / MINUTES_PER_DAY);
         return car.getPricePerDay().multiply(BigDecimal.valueOf(days));

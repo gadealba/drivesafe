@@ -1,19 +1,5 @@
 // Only the mediator calls these functions. Components never import this file.
-
-async function request(url, options) {
-  const res = await fetch(url, options)
-  if (!res.ok) {
-    const problem = await res.json().catch(() => ({}))
-    throw new Error(problem.detail || `Request failed (${res.status})`)
-  }
-  return res.json()
-}
-
-const jsonRequest = (method, body) => ({
-  method,
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify(body),
-})
+import { jsonRequest, request } from './http'
 
 export const createUser = (user) => request('/api/users/create', jsonRequest('POST', user))
 
@@ -24,3 +10,8 @@ export const getUsers = () => request('/api/users/getAll')
 
 /** The predetermined security questions: [{ id, text }, ...] */
 export const getSecurityQuestions = () => request('/api/security-questions')
+
+/** Who is logged in right now? Rejects with status 401 when there is no valid session. */
+export const getSession = () => request('/api/session')
+
+export const logoutSession = () => request('/api/session/logout', { method: 'POST' })

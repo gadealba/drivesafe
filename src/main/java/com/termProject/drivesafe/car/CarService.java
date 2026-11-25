@@ -27,22 +27,22 @@ public class CarService {
 
     /** Lists a car. This method hands the request's details to the Builder and saves the result. */
     @Transactional
-    public CarListing create(long ownerId, CreateCarRequest request) {
+    public CarListingModel create(long ownerId, CreateCarRequest request) {
         UserModel owner = userRepo.findById(ownerId)
             .orElseThrow(() -> RentalException.notFound("User not found."));
 
-        CarListing.Builder builder = CarListing.builder()
+        CarListingModel.Builder builder = CarListingModel.builder()
             .owner(owner)
             .year(request.year())
             .make(request.make())
             .model(request.model())
             .mileage(request.mileage())
             .pickupLocation(request.pickupLocation())
-            .pricePerDay(request.pricePerDay())
-            .color(request.color())
-            .description(request.description())
-            .seats(request.seats())
-            .transmission(request.transmission());
+            .pricePerDay(request.pricePerDay());
+            // .color(request.color())
+            // .description(request.description())
+            // .seats(request.seats())
+            // .transmission(request.transmission());
 
         if (request.availability() != null) {
             for (AvailabilityWindowDto window : request.availability()) {
@@ -57,8 +57,8 @@ public class CarService {
      * cars that are free for that whole period.
      */
     @Transactional(readOnly = true)
-    public List<CarListing> browse(Instant start, Instant end) {
-        List<CarListing> cars;
+    public List<CarListingModel> browse(Instant start, Instant end) {
+        List<CarListingModel> cars;
         if (start == null && end == null) {
             cars = carRepo.findByActiveTrue();
         } else if (start == null || end == null) {
@@ -68,18 +68,18 @@ public class CarService {
         } else {
             cars = carRepo.findAvailable(start, end, BookingStatus.CONFIRMED);
         }
-        return cars.stream().sorted(Comparator.comparing(CarListing::getPricePerDay)).toList();
+        return cars.stream().sorted(Comparator.comparing(CarListingModel::getPricePerDay)).toList();
     }
 
     @Transactional(readOnly = true)
-    public List<CarListing> listOwnedBy(long ownerId) {
+    public List<CarListingModel> listOwnedBy(long ownerId) {
         return carRepo.findByOwnerId(ownerId);
     }
 
     /** One listing. An inactive one is only visible to its owner. */
     @Transactional(readOnly = true)
-    public CarListing get(long carId, long viewerId) {
-        CarListing car = carRepo.findById(carId)
+    public CarListingModel get(long carId, long viewerId) {
+        CarListingModel car = carRepo.findById(carId)
             .orElseThrow(() -> RentalException.notFound("Car not found."));
         if (!car.isActive() && car.getOwner().getId() != viewerId) {
             throw RentalException.notFound("Car not found.");
@@ -89,8 +89,8 @@ public class CarService {
 
     /** Owner changes price, pickup location, mileage, or turns the listing on or off. */
     @Transactional
-    public CarListing update(long carId, long ownerId, UpdateCarRequest request) {
-        CarListing car = findOwned(carId, ownerId);
+    public CarListingModel update(long carId, long ownerId, UpdateCarRequest request) {
+        CarListingModel car = findOwned(carId, ownerId);
         if (request.pricePerDay() != null) car.changePrice(request.pricePerDay());
         if (request.pickupLocation() != null) car.changePickupLocation(request.pickupLocation());
         if (request.mileage() != null) car.changeMileage(request.mileage());
@@ -103,8 +103,8 @@ public class CarService {
      * otherwise the change is refused. The car row is locked so nobody can book mid-change.
      */
     @Transactional
-    public CarListing updateAvailability(long carId, long ownerId, List<AvailabilityWindowDto> windows) {
-        CarListing car = carRepo.findByIdForUpdate(carId)
+    public CarListingModel updateAvailability(long carId, long ownerId, List<AvailabilityWindowDto> windows) {
+        CarListingModel car = carRepo.findByIdForUpdate(carId)
             .orElseThrow(() -> RentalException.notFound("Car not found."));
         requireOwner(car, ownerId);
 
@@ -113,9 +113,9 @@ public class CarService {
                 .map(w -> new TimeRange(w.start(), w.end()))
                 .toList());
 
-        List<Booking> upcoming = bookingRepo.findByCarIdAndStatusAndEndTimeAfter(
+        List<BookingModel> upcoming = bookingRepo.findByCarIdAndStatusAndEndTimeAfter(
             carId, BookingStatus.CONFIRMED, Instant.now());
-        for (Booking booking : upcoming) {
+        for (BookingModel booking : upcoming) {
             boolean stillCovered = ranges.stream().anyMatch(r ->
                 !r.start().isAfter(booking.getStartTime()) && !r.end().isBefore(booking.getEndTime()));
             if (!stillCovered) {
@@ -131,14 +131,14 @@ public class CarService {
 
     // ---- helpers ------------------------------------------------------------
 
-    private CarListing findOwned(long carId, long ownerId) {
-        CarListing car = carRepo.findById(carId)
+    private CarListingModel findOwned(long carId, long ownerId) {
+        CarListingModel car = carRepo.findById(carId)
             .orElseThrow(() -> RentalException.notFound("Car not found."));
         requireOwner(car, ownerId);
         return car;
     }
 
-    private static void requireOwner(CarListing car, long userId) {
+    private static void requireOwner(CarListingModel car, long userId) {
         if (car.getOwner().getId() != userId) {
             throw RentalException.forbidden("You can only manage your own listings.");
         }

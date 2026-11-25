@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import './AuthView.css'
 import { useMediator } from '../mediator/useMediator'
 import TextField from '../components/TextField'
@@ -12,11 +11,6 @@ const QUESTION_SLOTS = [1, 2, 3]
 /** The Sign up page: a title near the top and a tall, centered card holding the form. */
 export default function SignUpView() {
   const mediator = useMediator()
-
-  // Tell the mediator this page is showing so it can load the security questions.
-  useEffect(() => {
-    mediator.notify('signUpView', 'view:opened', { view: 'signUp' })
-  }, [mediator])
 
   const handleSubmit = (e) => {
     e.preventDefault()

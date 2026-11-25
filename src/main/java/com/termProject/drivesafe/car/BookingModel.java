@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 )
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Booking {
+public class BookingModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +24,7 @@ public class Booking {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "car_id", nullable = false)
-    private CarListing car;
+    private CarListingModel car;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "renter_id", nullable = false)
@@ -47,7 +47,7 @@ public class Booking {
     @Column(nullable = false)
     private Instant createdAt = Instant.now();
 
-    public Booking(CarListing car, UserModel renter, Instant startTime, Instant endTime, BigDecimal totalPrice) {
+    public BookingModel(CarListingModel car, UserModel renter, Instant startTime, Instant endTime, BigDecimal totalPrice) {
         this.car = car;
         this.renter = renter;
         this.startTime = startTime;

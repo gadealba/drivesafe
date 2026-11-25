@@ -19,10 +19,10 @@ public final class CarDtos {
         Integer mileage,
         String pickupLocation,
         BigDecimal pricePerDay,
-        String color,
-        String description,
-        Integer seats,
-        Transmission transmission,
+        // String color,
+        // String description,
+        // Integer seats,
+        // Transmission transmission,
         List<AvailabilityWindowDto> availability) {}
 
     /** Any field left out (null) stays unchanged. */
@@ -42,14 +42,14 @@ public final class CarDtos {
         int mileage,
         String pickupLocation,
         BigDecimal pricePerDay,
-        String color,
-        String description,
-        Integer seats,
-        Transmission transmission,
+        // String color,
+        // String description,
+        // Integer seats,
+        // Transmission transmission,
         boolean active,
         List<AvailabilityWindowDto> availability) {
 
-        public static CarResponse from(CarListing car) {
+        public static CarResponse from(CarListingModel car) {
             return new CarResponse(
                 car.getId(),
                 car.getOwner().getId(),
@@ -60,10 +60,10 @@ public final class CarDtos {
                 car.getMileage(),
                 car.getPickupLocation(),
                 car.getPricePerDay(),
-                car.getColor(),
-                car.getDescription(),
-                car.getSeats(),
-                car.getTransmission(),
+                // car.getColor(),
+                // car.getDescription(),
+                // car.getSeats(),
+                // car.getTransmission(),
                 car.isActive(),
                 car.getAvailability().stream()
                     .map(w -> new AvailabilityWindowDto(w.getStartTime(), w.getEndTime()))
@@ -81,7 +81,7 @@ public final class CarDtos {
         BigDecimal totalPrice,
         BookingStatus status) {
 
-        public static BookingResponse from(Booking b) {
+        public static BookingResponse from(BookingModel b) {
             return new BookingResponse(
                 b.getId(), b.getCar().getId(), b.getStartTime(), b.getEndTime(),
                 b.getTotalPrice(), b.getStatus());

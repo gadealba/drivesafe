@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "car_listings")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CarListing {
+public class CarListingModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,16 +52,16 @@ public class CarListing {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal pricePerDay;
 
-    // ---- optional details ----
-    private String color;
+    // // ---- optional details ----
+    // private String color;
 
-    @Column(length = 1000)
-    private String description;
+    // @Column(length = 1000)
+    // private String description;
 
-    private Integer seats;
+    // private Integer seats;
 
-    @Enumerated(EnumType.STRING)
-    private Transmission transmission;
+    // @Enumerated(EnumType.STRING)
+    // private Transmission transmission;
 
     /** An inactive listing is hidden from renters and cannot be booked. */
     @Column(nullable = false)
@@ -70,7 +70,7 @@ public class CarListing {
     /** The calendar: when this car can be rented. */
     @OneToMany(mappedBy = "car", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("startTime ASC")
-    private List<AvailabilityWindow> availability = new ArrayList<>();
+    private List<AvailabilityWindowModel> availability = new ArrayList<>();
 
     // =====================================================================
     // Builder
@@ -88,15 +88,14 @@ public class CarListing {
         private Integer mileage;
         private String pickupLocation;
         private BigDecimal pricePerDay;
-        private String color;
-        private String description;
-        private Integer seats;
-        private Transmission transmission;
+        // private String color;
+        // private String description;
+        // private Integer seats;
+        // private Transmission transmission;
         private final List<TimeRange> windows = new ArrayList<>();
 
         private Builder() {}
 
-        // required
         public Builder owner(UserModel owner) { this.owner = owner; return this; }
         public Builder year(Integer year) { this.year = year; return this; }
         public Builder make(String make) { this.make = make; return this; }
@@ -105,11 +104,11 @@ public class CarListing {
         public Builder pickupLocation(String pickupLocation) { this.pickupLocation = pickupLocation; return this; }
         public Builder pricePerDay(BigDecimal pricePerDay) { this.pricePerDay = pricePerDay; return this; }
 
-        // optional
-        public Builder color(String color) { this.color = color; return this; }
-        public Builder description(String description) { this.description = description; return this; }
-        public Builder seats(Integer seats) { this.seats = seats; return this; }
-        public Builder transmission(Transmission transmission) { this.transmission = transmission; return this; }
+
+        // public Builder color(String color) { this.color = color; return this; }
+        // public Builder description(String description) { this.description = description; return this; }
+        // public Builder seats(Integer seats) { this.seats = seats; return this; }
+        // public Builder transmission(Transmission transmission) { this.transmission = transmission; return this; }
 
         /** Adds a window of time when the car can be rented. Call it as many times as you like. */
         public Builder availableFrom(Instant start, Instant end) {
@@ -118,12 +117,12 @@ public class CarListing {
         }
 
         /** Validates everything and creates the listing. Throws a 400 RentalException if something is wrong. */
-        public CarListing build() {
-            return new CarListing(this);
+        public CarListingModel build() {
+            return new CarListingModel(this);
         }
     }
 
-    private CarListing(Builder b) {
+    private CarListingModel(Builder b) {
         if (b.owner == null) throw RentalException.badRequest("A listing needs an owner.");
         this.owner = b.owner;
         this.year = requireYear(b.year);
@@ -133,10 +132,10 @@ public class CarListing {
         this.pickupLocation = requireText(b.pickupLocation, "pickupLocation");
         this.pricePerDay = requirePrice(b.pricePerDay);
 
-        this.color = blankToNull(b.color);
-        this.description = blankToNull(b.description);
-        this.seats = checkSeats(b.seats);
-        this.transmission = b.transmission;
+        // this.color = blankToNull(b.color);
+        // this.description = blankToNull(b.description);
+        // this.seats = checkSeats(b.seats);
+        // this.transmission = b.transmission;
 
         replaceAvailability(b.windows);
     }
@@ -167,7 +166,7 @@ public class CarListing {
         // Change the existing list in place so Hibernate can delete the removed windows.
         this.availability.clear();
         for (TimeRange range : normalized) {
-            this.availability.add(new AvailabilityWindow(this, range.start(), range.end()));
+            this.availability.add(new AvailabilityWindowModel(this, range.start(), range.end()));
         }
     }
 
@@ -207,14 +206,14 @@ public class CarListing {
         return value.trim();
     }
 
-    private static Integer checkSeats(Integer seats) {
-        if (seats != null && (seats < 1 || seats > 20)) {
-            throw RentalException.badRequest("seats must be between 1 and 20.");
-        }
-        return seats;
-    }
+    // private static Integer checkSeats(Integer seats) {
+    //     if (seats != null && (seats < 1 || seats > 20)) {
+    //         throw RentalException.badRequest("seats must be between 1 and 20.");
+    //     }
+    //     return seats;
+    // }
 
-    private static String blankToNull(String value) {
-        return value == null || value.isBlank() ? null : value.trim();
-    }
+    // private static String blankToNull(String value) {
+    //     return value == null || value.isBlank() ? null : value.trim();
+    // }
 }

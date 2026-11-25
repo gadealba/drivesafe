@@ -1,0 +1,37 @@
+/* Styles for the "have your vehicle rented" button and the listing form. */
+
+/* Top-right button on the cars page. On narrow screens it moves into the page flow, above the list. */
+.cars-corner {
+  position: absolute;
+  top: 31px;
+  right: 16px;
+}
+
+@media (max-width: 700px) {
+  .cars-corner {
+    position: static;
+    align-self: flex-end;
+  }
+}
+
+/* The listing form: a bit wider than the login card, with two-column rows. */
+.auth-card--form {
+  width: min(520px, 100%);
+}
+
+.auth-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.auth-row .auth-field,
+.auth-form .auth-field {
+  min-width: 0;
+}
+
+@media (max-width: 480px) {
+  .auth-row {
+    grid-template-columns: 1fr;
+  }
+}
